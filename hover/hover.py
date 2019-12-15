@@ -94,7 +94,6 @@ def listener():
         ret, first_frame = cap.read()  # get first frame
         sleep(0.1)
         ret, last_frame = cap.read()  # if we can't get 10 FPS there's a problem
-
         compare_frames(first_frame, last_frame)
 
 

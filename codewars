@@ -1,0 +1,29 @@
+MONTH = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+DAY = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
+
+def parse(crontab):
+    def decode(item, amount):
+        if "," in item:
+            return " ".join([decode(i, amount) for i in item.split(',')])
+        if "*" in item:
+            amount_arr = [str(i) for i in range(amount)]
+            print(type(int(item.split('/')[1])))
+            return " ".join(amount_arr[::int(item.split('/')[1])]) if "/" in item else " ".join(amount_arr)
+        if "-" in item:
+            return " ".join([str(i) for i in range(int(item.split("-")[0]), int(item.split("-")[1]) + 1)])
+        return item
+    cron_arr = crontab.split(" ")
+    minute = decode(cron_arr[0], 60)
+    hour = decode(cron_arr[1], 24)
+    day_of_month = decode(cron_arr[2], 31)
+    month = decode(cron_arr[3], 12) if cron_arr[3] not in MONTH else decode(MONTH.index(cron_arr[3]), 12)
+    day_of_week = decode(cron_arr[4], 7) if cron_arr[4] not in DAY else decode(DAY.index(cron_arr[4]), 6)
+    return "\n".join([
+                    "minute         {}".format(minute),
+                    "hour           {}".format(hour),
+                    "day of month   {}".format(day_of_month),
+                    "month          {}".format(month),
+                    "day of week    {}".format(day_of_week)
+                ])
+
+parse("*/15 1 1 1 1")
